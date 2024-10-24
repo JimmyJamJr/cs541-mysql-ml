@@ -1,3 +1,9 @@
 
 pybind_test/.DS_Store
 .DS_Store
+.idea/cs541-mysql-ml.iml
+.idea/material_theme_project_new.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+pybind_test/__pycache__/sentiment_analysis_function.cpython-310.pyc

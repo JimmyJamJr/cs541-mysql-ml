@@ -1,7 +1,7 @@
 def sentiment_analysis(data):
     from transformers import pipeline
     final_results = []
-    sentiment_pipeline = pipeline("sentiment-analysis")
+    sentiment_pipeline = pipeline("sentiment-analysis", device=0)
     results = sentiment_pipeline(data)
     for res in results:
         if res['label'] == 'POSITIVE':

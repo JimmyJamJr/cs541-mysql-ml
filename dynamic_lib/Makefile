@@ -18,18 +18,18 @@ MYSQL_PLUGIN_DIR = /usr/local/mysql/lib/plugin/
 CXXFLAGS = -std=c++11 -O2 -fPIC -shared -undefined dynamic_lookup -I$(PYBIND_INCLUDE) $(PYTHON_INCLUDE) -I$(MYSQL_INCLUDE) $(PYTHON_CFLAGS) -F/Library/Frameworks -framework Python
 
 # Source and target
-SOURCES = sentiment.cpp
-TARGET = $(MYSQL_PLUGIN_DIR)sentiment.so
+SOURCES = sentiment.cpp outliers.cpp
+TARGETS = $(addprefix $(MYSQL_PLUGIN_DIR), $(SOURCES:.cpp=.so))
 
 # Build target
-$(TARGET): $(SOURCES)
-	$(CXX) $(CXXFLAGS) $(SOURCES) -o $(TARGET) $(PYTHON_LDFLAGS)
+$(MYSQL_PLUGIN_DIR)%.so: %.cpp
+	$(CXX) $(CXXFLAGS) $< -o $@ $(PYTHON_LDFLAGS)
 
 copy:
 	cp -f -r $(COPY_FILES) $(MYSQL_PLUGIN_DIR)
 
-all: $(TARGET) copy
+all: $(TARGETS) copy
 
 # Clean target
 clean:
-	rm -f $(TARGET)
+	rm -f $(TARGETS)

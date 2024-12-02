@@ -38,9 +38,13 @@ extern "C"
 // Call xxx_init() to let the aggregate function allocate any memory it needs for storing results.
 // The initialization function for xxx().
 bool sentiment_init(UDF_INIT * initid, UDF_ARGS *args, char * message) {
-    if (args->arg_count != 1 || args->arg_type[0] != STRING_RESULT)
-    {
-        strcpy(message, "wrong arguments: sentiment() requires a column name as arguments");
+    if (args->arg_count < 1 || args->arg_count > 2 || args->arg_type[0] != STRING_RESULT) {
+        strcpy(message, "wrong arguments: sentiment() requires a column name or text as argument");
+        return 1;
+    }
+
+    if (args->arg_count == 2 && args->arg_type[1] != INT_RESULT) {
+        strcpy(message, "wrong arguments: Second argument for sentiment() must be 1 or 0 to denote whether to display the sentiment scores");
         return 1;
     }
 
@@ -67,13 +71,12 @@ bool sentiment_init(UDF_INIT * initid, UDF_ARGS *args, char * message) {
     }
 
     // Allocate memory for the result
-    initid->ptr = (char *)malloc(16384); // Adjust size as needed
+    initid->ptr = (char *)malloc(1024); // Adjust size as needed
     if (!initid->ptr) {
         strncpy(message, "Memory allocation failed", MYSQL_ERRMSG_SIZE);
         message[MYSQL_ERRMSG_SIZE - 1] = '\0';
         return 1;
     }
-//    initid->max_length = 16384;
 
     return 0;
 }
@@ -95,6 +98,14 @@ char * sentiment(UDF_INIT * initid, UDF_ARGS *args, char *result, unsigned long 
         py::gil_scoped_acquire acquire; // Acquire the GIL
         py::object sent = py::module_::import("sentiment_analysis_function");
         py::object sent_func = sent.attr("sentiment_analysis");
+
+        // If the second argument is provided, use the sentiment analysis with score option if
+        // argument is 1
+        if (args->arg_count == 2 && args->args[1]) {
+            long long arg_value = *((long long *)args->args[1]);
+            if (arg_value == 1)
+                sent_func = sent.attr("sentiment_analysis_with_score");
+        }
 
         // Call the sentiment analysis function on the input
         py::object sentiment_result = sent_func(input_value);

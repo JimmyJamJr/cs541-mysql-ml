@@ -10,8 +10,14 @@ Jimson Huang, Gregg Puttkammer, Grant Parker
 Class project in which we used MySQL's user-defined function (UDF) feature to incorporate machine learning predicates, including sentiment analysis and outlier detection. The ML predicates are implemeneted in a Python script and then incorporated into C++ for MySQL using the PyBind11 library.
 <br/>
 
+# Requirements:
+Python 3.10 or higher <br/>
+MySQL 8.0 or higher <br/>
+
 # Setup:
-Modify the Makefile to have the correct include paths for Pybind, Python3, and MySQL. Then run make all.
+Install required python modules: ```pip install -r requirements.txt``` <br/>
+Add the MySQL directory to PATH: ```export PATH=${PATH}:/usr/local/mysql/bin``` <br/>
+Compile using Makefile: ```sudo make all```
 
 # Example Usage:
 ```

@@ -7,3 +7,4 @@ pybind_test/.DS_Store
 .idea/modules.xml
 .idea/vcs.xml
 pybind_test/__pycache__/sentiment_analysis_function.cpython-310.pyc
+/dynamic_lib/sentiment_model/

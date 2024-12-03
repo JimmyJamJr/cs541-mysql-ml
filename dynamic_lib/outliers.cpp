@@ -11,11 +11,7 @@ https://dev.mysql.com/doc/extending-mysql/8.0/en/adding-loadable-function.html
 
 #include <ctype.h>
 #include <mysql.h>
-
-#include <cstring>
 #include <string>
-#include <thread>
-#include <mutex>
 
 typedef struct {
     double *values;

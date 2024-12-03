@@ -15,9 +15,12 @@ Python 3.10 or higher <br/>
 MySQL 8.0 or higher <br/>
 
 # Setup:
-Install required python modules: ```pip install -r requirements.txt``` <br/>
-Add the MySQL directory to PATH: ```export PATH=${PATH}:/usr/local/mysql/bin``` <br/>
-Compile using Makefile: ```sudo make all```
+Install required python modules: <br/>
+```pip install -r requirements.txt``` <br/>
+Add the MySQL directory to PATH: <br/>
+```export PATH=${PATH}:/usr/local/mysql/bin``` <br/>
+Compile using Makefile: <br/>
+```sudo make all```
 
 # Example Usage:
 ```

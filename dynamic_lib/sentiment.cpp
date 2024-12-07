@@ -48,7 +48,7 @@ bool sentiment_init(UDF_INIT * initid, UDF_ARGS *args, char * message) {
         return 1;
     }
 
-    initid->const_item = 1;     // This UDF is deterministic
+    initid->const_item = 0;     // This UDF is non-deterministic
     initid->maybe_null = 1;     // This UDF can return NULL
     initid->max_length = 0;     // The result can be of any length
 
@@ -57,9 +57,12 @@ bool sentiment_init(UDF_INIT * initid, UDF_ARGS *args, char * message) {
             py::initialize_interpreter();
 
             // Change cwd to the directory where the python script is
-            py::module_ os = py::module_::import("os");
-            py::object chdir = os.attr("chdir");
-            chdir("../lib/plugin");
+//            py::module_ os = py::module_::import("os");
+//            py::object chdir = os.attr("chdir");
+//            chdir("../lib/plugin");
+            py::module_ sys = py::module_::import("sys");
+            py::list path = sys.attr("path");
+            path.append("../lib/plugin");
 
             sent = py::module_::import("sentiment_analysis_function");
         });
@@ -96,7 +99,6 @@ char * sentiment(UDF_INIT * initid, UDF_ARGS *args, char *result, unsigned long 
 
         // Get the python sentiment analysis function
         py::gil_scoped_acquire acquire; // Acquire the GIL
-        py::object sent = py::module_::import("sentiment_analysis_function");
         py::object sent_func = sent.attr("sentiment_analysis");
 
         // If the second argument is provided, use the sentiment analysis with score option if
@@ -104,7 +106,7 @@ char * sentiment(UDF_INIT * initid, UDF_ARGS *args, char *result, unsigned long 
         if (args->arg_count == 2 && args->args[1]) {
             long long arg_value = *((long long *)args->args[1]);
             if (arg_value == 1)
-                sent_func = sent.attr("sentiment_analysis_with_score");
+                sent_func = sent.attr("sentiment_analysis_score");
         }
 
         // Call the sentiment analysis function on the input

@@ -1,5 +1,5 @@
 from transformers import TextClassificationPipeline, AutoModelForSequenceClassification, AutoTokenizer
-model_path = "sentiment_model"
+model_path = "../lib/plugin/sentiment_model"
 
 # Load the model and tokenizer directly from the local path
 model = AutoModelForSequenceClassification.from_pretrained(model_path, local_files_only=True)
@@ -21,11 +21,11 @@ def sentiment_analysis(data):
             return "Negative"
 
 
-def sentiment_analysis_with_score(data):
+def sentiment_analysis_score(data):
     final_results = []
     results = sentiment_pipeline(data)
     for res in results:
         if res['label'] == 'POSITIVE':
-            return "Positive " + str(res['score'])
+            return str(res['score'])
         else:
-            return "Negative " + str(res['score'])
+            return str(res['score'])
